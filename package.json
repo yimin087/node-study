@@ -1,0 +1,25 @@
+{
+  "name": "node-study",
+  "version": "1.0.0",
+  "description": "node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cross-env NODE_ENV=dev nodemon ./bin/www.js",
+    "prod": "cross-env NODE_ENV=production nodemon ./bin/www.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yimin087/node-study.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yimin087/node-study/issues"
+  },
+  "homepage": "https://github.com/yimin087/node-study#readme",
+  "devDependencies": {
+    "cross-env": "^5.2.0"
+  }
+}
