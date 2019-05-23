@@ -14,9 +14,12 @@ const handleBlogRouter = (req, res) => {
 	if (req.method === 'GET' && req.path === '/api/blog/list') {
 		const author = req.query.author || ''
 		const keyword = req.query.keyword || ''
-		const listData = getList(author, keyword)
+		return getList(author, keyword).then(res => {
+			return new SuccessModel(res)
+		})
+		// console.log()
 
-		return new SuccessModel(listData)
+		// return new SuccessModel(listData)
 	}
 
 	/**
@@ -25,17 +28,26 @@ const handleBlogRouter = (req, res) => {
 	if (req.method === 'GET' && req.path === '/api/blog/detail') {
 		const id = req.query.id
 		if (!id) {
-			return new ErrorModel('id 参数不能为空')
+			return new Promise((resolve, reject) => {
+				resolve(new ErrorModel('id 参数不能为空'))
+			})
 		}
-		const detailData = getDetail(id)
-		return new SuccessModel(detailData)
+		return getDetail(id).then(detailData => {
+			return new SuccessModel(detailData)
+		})
 	}
 	/**
 	 * 博客新建一篇接口
 	 */
 	if (req.method === 'POST' && req.path === '/api/blog/new') {
-		const blogData = newBlog(req.body)
-		return new SuccessModel(blogData)
+		if (!req.body.title || !req.body.content || !req.body.author) {
+			return new Promise((resolve, reject) => {
+				resolve(new ErrorModel('title content author 参数不能为空'))
+			})
+		}
+		return newBlog(req.body).then(blogData => {
+			return new SuccessModel(blogData)
+		})
 	}
 	/**
 	 * 博客更新一篇接口
