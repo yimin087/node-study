@@ -10,6 +10,20 @@ const serverHandle = (req, res) => {
 	// query
 	req.query = querystring.parse(req.url.split('?')[1])
 
+	// 解析cookie
+	req.cookie = {}
+	if (req.headers.cookie) {
+		req.headers.cookie.split(';').forEach(item => {
+			if (!item) {
+				return false
+			}
+			let arr = item.split('=')
+			let key = arr[0].trim()
+			let val = arr[1].trim()
+			req.cookie[key] = val
+		})
+	}
+	// console.log(req.cookie)
 	// 处理post data
 	getPostData(req).then(postData => {
 		req.body = postData
@@ -27,9 +41,11 @@ const serverHandle = (req, res) => {
 			return
 		}
 		// user路由
-		const userData = handleUserRouter(req, res)
-		if (userData) {
-			res.end(JSON.stringify(userData))
+		const userResult = handleUserRouter(req, res)
+		if (userResult) {
+			userResult.then(userData => {
+				res.end(JSON.stringify(userData))
+			})
 			return
 		}
 		// 未匹配

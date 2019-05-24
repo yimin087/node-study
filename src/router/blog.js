@@ -17,9 +17,6 @@ const handleBlogRouter = (req, res) => {
 		return getList(author, keyword).then(res => {
 			return new SuccessModel(res)
 		})
-		// console.log()
-
-		// return new SuccessModel(listData)
 	}
 
 	/**
@@ -28,9 +25,7 @@ const handleBlogRouter = (req, res) => {
 	if (req.method === 'GET' && req.path === '/api/blog/detail') {
 		const id = req.query.id
 		if (!id) {
-			return new Promise((resolve, reject) => {
-				resolve(new ErrorModel('id 参数不能为空'))
-			})
+			return Promise.resolve(new ErrorModel('id 参数不能为空'))
 		}
 		return getDetail(id).then(detailData => {
 			return new SuccessModel(detailData)
@@ -41,9 +36,9 @@ const handleBlogRouter = (req, res) => {
 	 */
 	if (req.method === 'POST' && req.path === '/api/blog/new') {
 		if (!req.body.title || !req.body.content || !req.body.author) {
-			return new Promise((resolve, reject) => {
-				resolve(new ErrorModel('title content author 参数不能为空'))
-			})
+			return Promise.resolve(
+				new ErrorModel('title content author 参数不能为空')
+			)
 		}
 		return newBlog(req.body).then(blogData => {
 			return new SuccessModel(blogData)
@@ -53,22 +48,23 @@ const handleBlogRouter = (req, res) => {
 	 * 博客更新一篇接口
 	 */
 	if (req.method === 'POST' && req.path === '/api/blog/update') {
-		if (!req.body.id) {
-			return new ErrorModel('id 参数不能为空')
+		if (!req.body.id || !req.body.title || !req.body.content) {
+			return Promise.resolve(new ErrorModel('title content id 参数不能为空'))
 		}
-		const data = updateBlog(req.body)
-		return new SuccessModel(data)
+		return updateBlog(req.body).then(blogData => {
+			return new SuccessModel(blogData)
+		})
 	}
 	/**
 	 * 博客删除一篇接口
 	 */
 	if (req.method === 'POST' && req.path === '/api/blog/del') {
-		let id = req.body.id
-		if (!id) {
-			return new ErrorModel('id 参数不能为空')
+		if (!req.body.id || !req.body.author) {
+			return Promise.resolve(new ErrorModel('author id 参数不能为空'))
 		}
-		const data = delBlog(id)
-		return new SuccessModel(data)
+		return delBlog(req.body).then(blogData => {
+			return new SuccessModel(blogData)
+		})
 	}
 }
 
