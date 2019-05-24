@@ -4,6 +4,7 @@ const {SuccessModel, ErrorModel} = require('../model/resModel.js')
 const handleUserRouter = (req, res) => {
 	/**
 	 * 博客登录接口
+	 * TODO:测试该给GET和query => POST BODY
 	 */
 	if (req.method === 'GET' && req.path === '/api/user/login') {
 		const {username, password} = req.query
